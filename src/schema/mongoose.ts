@@ -26,6 +26,6 @@ export const User = model<IUser>("user", userSchema);
 
 export async function connectDB() {
     if (dbUrl) {
-        connect(dbUrl);
+        await connect(dbUrl);
     }
 }
