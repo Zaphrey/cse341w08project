@@ -1,9 +1,9 @@
 import { config } from "dotenv"
 import { Request, Response } from "express"
 import { User, connectDB } from "@schema/mongoose";
+import { connect, connection } from "mongoose"
 
 config();
-connectDB();
 
 export async function addUser(req: Request, res: Response) {
     // Assume all parameters exist, then check
@@ -12,6 +12,8 @@ export async function addUser(req: Request, res: Response) {
     let email = req.query.email
 
     if (username && password && email && process.env.DB_URL) {
+        connect(process.env.DB_URL);
+
         let user_id = 1
         let users = await User.find({}).sort({ "user_id": -1 })
 
@@ -27,6 +29,9 @@ export async function addUser(req: Request, res: Response) {
             user_id: user_id,
         })
 
+        user.save();
+        connection.close()
+
         res.setHeader("Content-Type", "application/json");
         res.status(201).send(`Created user: ${user_id}`);
     } else {
@@ -36,8 +41,11 @@ export async function addUser(req: Request, res: Response) {
 
 export async function getUsers(req: Request, res: Response) {
     if (process.env.DB_URL) {
+        connect(process.env.DB_URL);
+
         let users = await (User.find().limit(10));
 
+        connection.close();
         res.setHeader("Content-Type", "application/json");
         res.status(200).send(JSON.stringify(users))
     } else {
@@ -49,7 +57,11 @@ export async function getUser(req: Request, res: Response) {
     let id = req.params.id
     console.log(id)
     if (id && process.env.DB_URL) {
+        connect(process.env.DB_URL);
+
         let user = await User.find({ "user_id": id })
+
+        connection.close();
 
         if (user[0]) {
             res.setHeader("Content-Type", "application/json");
