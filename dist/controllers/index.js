@@ -19,9 +19,9 @@ const mongoose_2 = require("mongoose");
 function addUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         // Assume all parameters exist, then check
-        let username = req.query.username;
-        let password = req.query.password;
-        let email = req.query.email;
+        let username = req.body.username;
+        let password = req.body.password;
+        let email = req.body.email;
         if (username && password && email && process.env.DB_URL) {
             yield (0, mongoose_2.connect)(process.env.DB_URL);
             let user_id = 1;
