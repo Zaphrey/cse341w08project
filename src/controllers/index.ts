@@ -7,13 +7,12 @@ config();
 
 export async function addUser(req: Request, res: Response) {
     // Assume all parameters exist, then check
-    let username = req.body.username
-    let password = req.body.password
-    let email = req.body.email
+    let username = req.query.username
+    let password = req.query.password
+    let email = req.query.email
 
     if (username && password && email && process.env.DB_URL) {
-        console.log("connecting")
-        connect(process.env.DB_URL);
+        await connect(process.env.DB_URL);
 
         let user_id = 1
         let users = await User.find({}).sort({ "user_id": -1 })
@@ -41,11 +40,8 @@ export async function addUser(req: Request, res: Response) {
 }
 
 export async function getUsers(req: Request, res: Response) {
-    console.log("getUsers")
     if (process.env.DB_URL) {
-        console.log("connecting")
-        console.log(process.env.DB_URL);
-        connect(process.env.DB_URL);
+        await connect(process.env.DB_URL);
 
         let users = await (User.find().limit(10));
 
@@ -59,13 +55,10 @@ export async function getUsers(req: Request, res: Response) {
 
 export async function getUser(req: Request, res: Response) {
     let id = req.params.id
-    console.log(id)
     if (id && process.env.DB_URL) {
-        connect(process.env.DB_URL);
+        await connect(process.env.DB_URL);
 
         let user = await User.find({ "user_id": id })
-
-        connection.close();
 
         if (user[0]) {
             res.setHeader("Content-Type", "application/json");

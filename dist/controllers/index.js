@@ -19,12 +19,11 @@ const mongoose_2 = require("mongoose");
 function addUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         // Assume all parameters exist, then check
-        let username = req.body.username;
-        let password = req.body.password;
-        let email = req.body.email;
+        let username = req.query.username;
+        let password = req.query.password;
+        let email = req.query.email;
         if (username && password && email && process.env.DB_URL) {
-            console.log("connecting");
-            (0, mongoose_2.connect)(process.env.DB_URL);
+            yield (0, mongoose_2.connect)(process.env.DB_URL);
             let user_id = 1;
             let users = yield mongoose_1.User.find({}).sort({ "user_id": -1 });
             if (users[0]) {
@@ -49,11 +48,8 @@ function addUser(req, res) {
 }
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("getUsers");
         if (process.env.DB_URL) {
-            console.log("connecting");
-            console.log(process.env.DB_URL);
-            (0, mongoose_2.connect)(process.env.DB_URL);
+            yield (0, mongoose_2.connect)(process.env.DB_URL);
             let users = yield (mongoose_1.User.find().limit(10));
             mongoose_2.connection.close();
             res.setHeader("Content-Type", "application/json");
@@ -67,11 +63,9 @@ function getUsers(req, res) {
 function getUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let id = req.params.id;
-        console.log(id);
         if (id && process.env.DB_URL) {
-            (0, mongoose_2.connect)(process.env.DB_URL);
+            yield (0, mongoose_2.connect)(process.env.DB_URL);
             let user = yield mongoose_1.User.find({ "user_id": id });
-            mongoose_2.connection.close();
             if (user[0]) {
                 res.setHeader("Content-Type", "application/json");
                 res.status(200).send(JSON.stringify(user[0]));
