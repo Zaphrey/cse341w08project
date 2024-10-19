@@ -13,7 +13,7 @@
   "paths": {
     "/user": {
       "post": {
-        "description": "",
+        "description": "Sends a request to create a new user in the database.",
         "produces": [
           "application/json"
         ],
@@ -25,13 +25,16 @@
               "type": "object",
               "properties": {
                 "username": {
-                  "example": "string"
+                  "example": "TopReviews12",
+                  "required": true
                 },
                 "password": {
-                  "example": "string"
+                  "example": "$wissCheese3011",
+                  "required": true
                 },
                 "email": {
-                  "example": "string"
+                  "example": "topreviews12@gmail.com",
+                  "required": true
                 }
               }
             }
