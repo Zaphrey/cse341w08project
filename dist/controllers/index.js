@@ -16,14 +16,14 @@ const dotenv_1 = require("dotenv");
 const mongoose_1 = require("../schema/mongoose");
 const mongoose_2 = require("mongoose");
 (0, dotenv_1.config)();
-(0, mongoose_1.connectDB)();
 function addUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         // Assume all parameters exist, then check
-        let username = req.query.username;
-        let password = req.query.password;
-        let email = req.query.email;
+        let username = req.body.username;
+        let password = req.body.password;
+        let email = req.body.email;
         if (username && password && email && process.env.DB_URL) {
+            (0, mongoose_2.connect)(process.env.DB_URL);
             let user_id = 1;
             let users = yield mongoose_1.User.find({}).sort({ "user_id": -1 });
             if (users[0]) {
@@ -33,11 +33,12 @@ function addUser(req, res) {
                 name: username,
                 password: password,
                 email: email,
-                date_joined: new Date().getDate(),
+                date_joined: new Date(),
                 user_id: user_id,
             });
-            yield user.save();
+            user.save();
             mongoose_2.connection.close();
+            res.setHeader("Content-Type", "application/json");
             res.status(201).send(`Created user: ${user_id}`);
         }
         else {
@@ -48,7 +49,10 @@ function addUser(req, res) {
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (process.env.DB_URL) {
+            (0, mongoose_2.connect)(process.env.DB_URL);
             let users = yield (mongoose_1.User.find().limit(10));
+            mongoose_2.connection.close();
+            res.setHeader("Content-Type", "application/json");
             res.status(200).send(JSON.stringify(users));
         }
         else {
@@ -61,8 +65,11 @@ function getUser(req, res) {
         let id = req.params.id;
         console.log(id);
         if (id && process.env.DB_URL) {
+            (0, mongoose_2.connect)(process.env.DB_URL);
             let user = yield mongoose_1.User.find({ "user_id": id });
+            mongoose_2.connection.close();
             if (user[0]) {
+                res.setHeader("Content-Type", "application/json");
                 res.status(200).send(JSON.stringify(user[0]));
             }
             else {

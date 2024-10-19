@@ -8,6 +8,11 @@ const index_1 = __importDefault(require("./routes/index"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || "3000";
+app.use("/", (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Request-Method", "POST, GET, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Request-Headers", "content-type");
+});
 app.use("/", body_parser_1.default.json());
 app.use("/", index_1.default);
 app.listen(port, () => {

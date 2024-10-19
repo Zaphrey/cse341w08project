@@ -27,7 +27,7 @@ exports.User = (0, mongoose_1.model)("user", userSchema);
 function connectDB() {
     return __awaiter(this, void 0, void 0, function* () {
         if (dbUrl) {
-            (0, mongoose_1.connect)(dbUrl);
+            yield (0, mongoose_1.connect)(dbUrl);
         }
     });
 }
