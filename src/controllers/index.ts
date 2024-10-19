@@ -12,6 +12,7 @@ export async function addUser(req: Request, res: Response) {
     let email = req.body.email
 
     if (username && password && email && process.env.DB_URL) {
+        console.log("connecting")
         connect(process.env.DB_URL);
 
         let user_id = 1
@@ -40,7 +41,10 @@ export async function addUser(req: Request, res: Response) {
 }
 
 export async function getUsers(req: Request, res: Response) {
+    console.log("getUsers")
     if (process.env.DB_URL) {
+        console.log("connecting")
+        console.log(process.env.DB_URL);
         connect(process.env.DB_URL);
 
         let users = await (User.find().limit(10));

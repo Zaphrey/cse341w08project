@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Movie Rater",
-    "description": "Description",
+    "description": "An api for a service similar to IMDB or Letterboxd.",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
@@ -47,7 +47,7 @@
         }
       },
       "get": {
-        "description": "",
+        "description": "Gets a complete list of all the users.",
         "produces": [
           "application/json"
         ],
@@ -63,7 +63,7 @@
     },
     "/user/{id}": {
       "get": {
-        "description": "",
+        "description": "Get the data of a user with from the specified ID",
         "produces": [
           "application/json"
         ],
@@ -72,7 +72,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "number"
           }
         ],
         "responses": {

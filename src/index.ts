@@ -7,9 +7,11 @@ const port: String = process.env.PORT || "3000"
 
 app.use("/", (req: Request, res: Response, next: NextFunction) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Request-Method", "POST, GET, PUT, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Request-Headers", "content-type");
-})
+    res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Z-Key");
+    next();
+});
+
 app.use("/", bodyParser.json())
 app.use("/", defaultRouter)
 

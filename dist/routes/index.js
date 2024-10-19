@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("../controllers/index");
 const express_1 = require("express");
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
-const swaggerDocument = require(".../swagger-output.json");
+const swaggerDocument = require("../swagger-output.json");
 const defaultRouter = (0, express_1.Router)();
 defaultRouter.use("/api-docs", swagger_ui_express_1.default.serve);
 defaultRouter.get("/api-docs", swagger_ui_express_1.default.setup(swaggerDocument));

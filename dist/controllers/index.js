@@ -23,6 +23,7 @@ function addUser(req, res) {
         let password = req.body.password;
         let email = req.body.email;
         if (username && password && email && process.env.DB_URL) {
+            console.log("connecting");
             (0, mongoose_2.connect)(process.env.DB_URL);
             let user_id = 1;
             let users = yield mongoose_1.User.find({}).sort({ "user_id": -1 });
@@ -48,7 +49,10 @@ function addUser(req, res) {
 }
 function getUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("getUsers");
         if (process.env.DB_URL) {
+            console.log("connecting");
+            console.log(process.env.DB_URL);
             (0, mongoose_2.connect)(process.env.DB_URL);
             let users = yield (mongoose_1.User.find().limit(10));
             mongoose_2.connection.close();

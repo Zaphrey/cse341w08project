@@ -10,8 +10,9 @@ const app = (0, express_1.default)();
 const port = process.env.PORT || "3000";
 app.use("/", (req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Request-Method", "POST, GET, PUT, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Request-Headers", "content-type");
+    res.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Z-Key");
+    next();
 });
 app.use("/", body_parser_1.default.json());
 app.use("/", index_1.default);
