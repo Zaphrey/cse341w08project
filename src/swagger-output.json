@@ -1,14 +1,14 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Movie Rater",
+    "title": "Movie Reviewer",
     "description": "An api for a service similar to IMDB or Letterboxd.",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "cse341w08project.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/user": {
