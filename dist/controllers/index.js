@@ -36,7 +36,7 @@ function addUser(req, res) {
                 date_joined: new Date(),
                 user_id: user_id,
             });
-            user.save();
+            yield user.save();
             mongoose_2.connection.close();
             res.setHeader("Content-Type", "application/json");
             res.status(201).send(`Created user: ${user_id}`);

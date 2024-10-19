@@ -29,8 +29,8 @@ export async function addUser(req: Request, res: Response) {
             user_id: user_id,
         })
 
-        user.save();
-        connection.close()
+        await user.save();
+        connection.close();
 
         res.setHeader("Content-Type", "application/json");
         res.status(201).send(`Created user: ${user_id}`);
