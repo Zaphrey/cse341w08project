@@ -7,9 +7,9 @@ config();
 
 export async function addUser(req: Request, res: Response) {
     // Assume all parameters exist, then check
-    let username = req.query.username
-    let password = req.query.password
-    let email = req.query.email
+    let username = req.body.username
+    let password = req.body.password
+    let email = req.body.email
 
     if (username && password && email && process.env.DB_URL) {
         await connect(process.env.DB_URL);
@@ -55,6 +55,7 @@ export async function getUsers(req: Request, res: Response) {
 
 export async function getUser(req: Request, res: Response) {
     let id = req.params.id
+
     if (id && process.env.DB_URL) {
         await connect(process.env.DB_URL);
 
