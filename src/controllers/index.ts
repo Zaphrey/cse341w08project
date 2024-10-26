@@ -114,7 +114,7 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
             res.status(201).send()
         })
         .catch(error => {
-            res.status(400).send("Could not find user")
+            res.status(400).send(error)
         })
 }
 
@@ -137,7 +137,7 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
             res.status(204).send();
         })
         .catch(error => {
-            res.status(400).send("Could not find user");
+            res.status(400).send(error);
         });
 }
 
