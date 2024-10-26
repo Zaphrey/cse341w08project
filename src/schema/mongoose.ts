@@ -6,12 +6,12 @@ config();
 const dbUrl: string | null = process.env.DB_URL || null
 
 export type IUser = {
+    _id: Object,
     name: string,
     password: string,
     email: string,
     date_joined: string,
     user_id: number,
-    ratings: Types.ObjectId,
 };
 
 // export type IMovie = {
@@ -25,12 +25,12 @@ export type IUser = {
 // }
 
 const userSchema = new Schema<IUser>({
+    _id: { type: Schema.Types.ObjectId, required: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
     date_joined: { type: String, required: true },
     user_id: { type: Number, required: true },
-    ratings: { type: Schema.Types.ObjectId, ref: "ratings" }
 });
 
 // From here, we'll establish a One-to-Many database connection from

@@ -13,9 +13,9 @@
   "paths": {
     "/user": {
       "post": {
-        "description": "",
+        "description": "Sends a request to create a new user in the database.",
         "produces": [
-          "application/json"
+          "text/html"
         ],
         "parameters": [
           {
@@ -25,13 +25,16 @@
               "type": "object",
               "properties": {
                 "username": {
-                  "example": "string"
+                  "example": "TopReviews12",
+                  "required": true
                 },
                 "password": {
-                  "example": "string"
+                  "example": "$wissCheese3011",
+                  "required": true
                 },
                 "email": {
-                  "example": "string"
+                  "example": "topreviews12@gmail.com",
+                  "required": true
                 }
               }
             }
@@ -43,6 +46,9 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Content"
           }
         }
       },
@@ -81,6 +87,68 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Content"
+          }
+        }
+      },
+      "put": {
+        "description": "Updates the data of a user from the specified ID with the included information.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Content"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes the user data from the specified ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Content"
           }
         }
       }

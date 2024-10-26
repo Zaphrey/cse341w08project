@@ -25,12 +25,12 @@ const dbUrl = process.env.DB_URL || null;
 //     user_review: string,
 // }
 const userSchema = new mongoose_1.Schema({
+    _id: { type: mongoose_1.Schema.Types.ObjectId, required: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
     date_joined: { type: String, required: true },
     user_id: { type: Number, required: true },
-    ratings: { type: mongoose_1.Schema.Types.ObjectId, ref: "ratings" }
 });
 // From here, we'll establish a One-to-Many database connection from
 // the User collection with the Movie collection

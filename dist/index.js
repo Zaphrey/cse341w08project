@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const body_parser_1 = __importDefault(require("body-parser"));
+require("express-async-errors");
 const app = (0, express_1.default)();
 const port = process.env.PORT || "3000";
 app.use("/", (req, res, next) => {

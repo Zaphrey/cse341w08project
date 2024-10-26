@@ -8,74 +8,137 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addUser = addUser;
 exports.getUsers = getUsers;
 exports.getUser = getUser;
+exports.updateUser = updateUser;
+exports.deleteUser = deleteUser;
+exports.deleteAllUsers = deleteAllUsers;
 const dotenv_1 = require("dotenv");
 const mongoose_1 = require("../schema/mongoose");
 const mongoose_2 = require("mongoose");
+const express_validator_1 = require("express-validator");
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const customErrors_1 = require("../errors/customErrors");
 (0, dotenv_1.config)();
-function addUser(req, res) {
+const DB_URI = (String)(process.env.DB_URL || ""); // Assuming that the DB URI is in fact there
+function addUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         // Assume all parameters exist, then check
-        let username = req.body.username;
-        let password = req.body.password;
-        let email = req.body.email;
-        if (username && password && email && process.env.DB_URL) {
-            yield (0, mongoose_2.connect)(process.env.DB_URL);
-            let user_id = 1;
-            let users = yield mongoose_1.User.find({}).sort({ "user_id": -1 });
-            if (users[0]) {
-                user_id += users[0].user_id;
-            }
-            const user = new mongoose_1.User({
-                name: username,
-                password: password,
-                email: email,
-                date_joined: new Date(),
-                user_id: user_id,
-            });
-            yield user.save();
-            mongoose_2.connection.close();
-            res.setHeader("Content-Type", "application/json");
-            res.status(201).send(`Created user: ${user_id}`);
+        let result = (0, express_validator_1.validationResult)(req);
+        if (!result.isEmpty()) {
+            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
         }
-        else {
-            res.status(400).send("Uh oh!");
+        yield (0, mongoose_2.connect)(DB_URI);
+        let doc_id = new mongoose_2.mongo.ObjectId().toString();
+        let user_id = 1;
+        let users = yield mongoose_1.User.find({}).sort({ "user_id": -1 });
+        let hashedPassword = yield bcrypt_1.default.hash(req.body.password, 10);
+        if (users[0]) {
+            user_id += users[0].user_id;
         }
+        const user = new mongoose_1.User({
+            _id: doc_id,
+            name: req.body.username,
+            password: hashedPassword,
+            email: req.body.email,
+            date_joined: new Date().toISOString().replace("/T/", " ").replace(/\..+/, ""),
+            user_id: user_id,
+        });
+        yield user.save();
+        mongoose_2.connection.close();
+        res.setHeader("Content-Type", "text/html");
+        res.status(201).send(`Created user ${user_id}, ${doc_id}`);
     });
 }
-function getUsers(req, res) {
+// Get
+function getUsers(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (process.env.DB_URL) {
-            yield (0, mongoose_2.connect)(process.env.DB_URL);
-            let users = yield (mongoose_1.User.find().limit(10));
-            mongoose_2.connection.close();
-            res.setHeader("Content-Type", "application/json");
-            res.status(200).send(JSON.stringify(users));
-        }
-        else {
-            res.status(400).send();
-        }
+        yield (0, mongoose_2.connect)(DB_URI);
+        let users = yield (mongoose_1.User.find());
+        mongoose_2.connection.close();
+        res.setHeader("Content-Type", "application/json");
+        res.status(200).send(users);
     });
 }
-function getUser(req, res) {
+function getUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
+        let result = (0, express_validator_1.validationResult)(req);
+        if (!result.isEmpty()) {
+            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
+        }
+        yield (0, mongoose_2.connect)(DB_URI);
+        mongoose_1.User.findOne({ "user_id": req.params.id })
+            .then(user => {
+            res.setHeader("Content-Type", "application/json");
+            res.status(200).send(JSON.stringify(user));
+        })
+            .catch(error => {
+            res.status(422).send(error);
+        });
+    });
+}
+// Update
+function updateUser(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b, _c;
+        let result = (0, express_validator_1.validationResult)(req);
+        if (!result.isEmpty()) {
+            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
+        }
+        let query = req.query;
+        let filter = { user_id: req.params.id };
+        // let userData = await User.findOne(filter);
+        let update = {
+            name: (_a = query.username) === null || _a === void 0 ? void 0 : _a.toString(),
+            password: (_b = query.password) === null || _b === void 0 ? void 0 : _b.toString(),
+            email: (_c = query.email) === null || _c === void 0 ? void 0 : _c.toString()
+        };
+        mongoose_1.User.findOneAndUpdate(filter, update)
+            .then(() => {
+            res.status(201).send();
+        })
+            .catch(error => {
+            res.status(400).send("Could not find user");
+        });
+    });
+}
+// Delete 
+function deleteUser(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = (0, express_validator_1.validationResult)(req);
+        if (!result.isEmpty()) {
+            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
+        }
         let id = req.params.id;
-        if (id && process.env.DB_URL) {
-            yield (0, mongoose_2.connect)(process.env.DB_URL);
-            let user = yield mongoose_1.User.find({ "user_id": id });
-            if (user[0]) {
-                res.setHeader("Content-Type", "application/json");
-                res.status(200).send(JSON.stringify(user[0]));
-            }
-            else {
-                res.status(400).send("Could not find user.");
-            }
+        let filter = { user_id: id };
+        yield (0, mongoose_2.connect)(DB_URI);
+        mongoose_1.User.findOneAndDelete(filter)
+            .then(user => {
+            res.status(204).send();
+        })
+            .catch(error => {
+            res.status(422).send();
+        });
+    });
+}
+function deleteAllUsers(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let result = (0, express_validator_1.validationResult)(req);
+        if (!result.isEmpty()) {
+            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
         }
-        else {
-            res.status(400).send("No user id provided.");
-        }
+        yield (0, mongoose_2.connect)(DB_URI);
+        mongoose_1.User.deleteMany({ user_id: { $gt: 0 } })
+            .then(query => {
+            res.status(204).send();
+        })
+            .catch(error => {
+            res.status(422).send();
+        });
     });
 }
