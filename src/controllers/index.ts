@@ -97,10 +97,15 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
     let query = req.query;
     let filter = { user_id: req.params.id };
     // let userData = await User.findOne(filter);
+    let password = query.password?.toString()
+
+    if (password) {
+        password = await bcrypt.hash(password, 10)
+    }
 
     let update: IUserData = {
         name: query.username?.toString(),
-        password: query.password?.toString(),
+        password: password,
         email: query.email?.toString()
     };
 
