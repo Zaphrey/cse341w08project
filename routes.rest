@@ -15,7 +15,7 @@ GET http://localhost:3000/user/1
 ### Update a user with an id of 1
 PUT http://localhost:3000/user/1?username=turnipHill1&password=$talberg2
 ### Delete a user with a specified id of 1
-DELETE http://localhost:3000/user
+DELETE http://localhost:3000/user/1
 
 ### RENDER
 
@@ -24,8 +24,8 @@ POST https://cse341w08project.onrender.com/user HTTP/1.1
 content-type: application/json
 
 {
-    "username": "turnipHill1",
-    "password": "$talberg2",
+    "username": "zaphrey",
+    "password": "password1221",
     "email": "sample.email@email.com"
 }
 ### Get all users
@@ -33,3 +33,7 @@ GET https://cse341w08project.onrender.com/user
 
 ### Get a specific user with id of 1
 GET https://cse341w08project.onrender.com/user/1
+### Update a user with an id of 1
+PUT https://cse341w08project.onrender.com/user/1?username=turnipHill1&password=$talberg2
+### Delete a user with a specified id of 1
+DELETE https://cse341w08project.onrender.com/user/1
