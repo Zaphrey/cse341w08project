@@ -75,7 +75,7 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
 
     await connect(DB_URI);
 
-    User.findOne({ "user_id": req.params.id })
+    User.findOne({ user_id: Number.parseInt(req.params.id) })
         .then(user => {
             res.setHeader("Content-Type", "application/json");
             res.status(200).send(JSON.stringify(user));
@@ -95,7 +95,7 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
     }
 
     let query = req.query;
-    let filter = { user_id: req.params.id };
+    let filter = { user_id: Number.parseInt(req.params.id) };
     // let userData = await User.findOne(filter);
     let password = query.password?.toString()
 
@@ -111,7 +111,7 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
 
     User.findOneAndUpdate(filter, update)
         .then(() => {
-            res.status(201).send()
+            res.status(201).send("Successfully updated user")
         })
         .catch(error => {
             res.status(400).send(error)
@@ -127,13 +127,13 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
         throw new ApiValidationError(`${JSON.stringify(result, null, 4)}`)
     }
 
-    let id = req.params.id;
+    let id = Number.parseInt(req.params.id);
     let filter = { user_id: id };
 
     await connect(DB_URI);
 
     User.findOneAndDelete(filter)
-        .then(user => {
+        .then(() => {
             res.status(204).send();
         })
         .catch(error => {

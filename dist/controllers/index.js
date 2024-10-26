@@ -72,7 +72,7 @@ function getUser(req, res, next) {
             throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
         }
         yield (0, mongoose_2.connect)(DB_URI);
-        mongoose_1.User.findOne({ "user_id": req.params.id })
+        mongoose_1.User.findOne({ user_id: Number.parseInt(req.params.id) })
             .then(user => {
             res.setHeader("Content-Type", "application/json");
             res.status(200).send(JSON.stringify(user));
@@ -91,7 +91,7 @@ function updateUser(req, res, next) {
             throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
         }
         let query = req.query;
-        let filter = { user_id: req.params.id };
+        let filter = { user_id: Number.parseInt(req.params.id) };
         // let userData = await User.findOne(filter);
         let password = (_a = query.password) === null || _a === void 0 ? void 0 : _a.toString();
         if (password) {
@@ -104,7 +104,7 @@ function updateUser(req, res, next) {
         };
         mongoose_1.User.findOneAndUpdate(filter, update)
             .then(() => {
-            res.status(201).send();
+            res.status(201).send("Successfully updated user");
         })
             .catch(error => {
             res.status(400).send(error);
@@ -118,11 +118,11 @@ function deleteUser(req, res, next) {
         if (!result.isEmpty()) {
             throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
         }
-        let id = req.params.id;
+        let id = Number.parseInt(req.params.id);
         let filter = { user_id: id };
         yield (0, mongoose_2.connect)(DB_URI);
         mongoose_1.User.findOneAndDelete(filter)
-            .then(user => {
+            .then(() => {
             res.status(204).send();
         })
             .catch(error => {
