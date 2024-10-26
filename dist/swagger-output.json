@@ -95,6 +95,9 @@
       },
       "put": {
         "description": "Updates the data of a user from the specified ID with the included information.",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "id",

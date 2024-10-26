@@ -93,9 +93,13 @@ function updateUser(req, res, next) {
         let query = req.query;
         let filter = { user_id: req.params.id };
         // let userData = await User.findOne(filter);
+        let password = (_a = query.password) === null || _a === void 0 ? void 0 : _a.toString();
+        if (password) {
+            password = yield bcrypt_1.default.hash(password, 10);
+        }
         let update = {
-            name: (_a = query.username) === null || _a === void 0 ? void 0 : _a.toString(),
-            password: (_b = query.password) === null || _b === void 0 ? void 0 : _b.toString(),
+            name: (_b = query.username) === null || _b === void 0 ? void 0 : _b.toString(),
+            password: password,
             email: (_c = query.email) === null || _c === void 0 ? void 0 : _c.toString()
         };
         mongoose_1.User.findOneAndUpdate(filter, update)
@@ -103,7 +107,7 @@ function updateUser(req, res, next) {
             res.status(201).send();
         })
             .catch(error => {
-            res.status(400).send("Could not find user");
+            res.status(400).send(error);
         });
     });
 }
@@ -122,7 +126,7 @@ function deleteUser(req, res, next) {
             res.status(204).send();
         })
             .catch(error => {
-            res.status(422).send();
+            res.status(400).send(error);
         });
     });
 }
