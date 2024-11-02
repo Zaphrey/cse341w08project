@@ -12,6 +12,6 @@ function userValidationError(error, req, res, next) {
         });
     }
     ;
-    console.log("ERROR???");
+    console.log(error);
     next(error);
 }

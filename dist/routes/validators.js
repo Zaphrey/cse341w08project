@@ -51,9 +51,9 @@ const getUserReviewsRules = () => {
 exports.getUserReviewsRules = getUserReviewsRules;
 const updateReviewRules = () => {
     return [
-        (0, express_validator_1.body)("body", "Body message must be between 20 and 1000 characters").notEmpty().isLength({ min: 20, max: 1000 }).optional(),
-        (0, express_validator_1.body)("title", "Title must be between 5 and 30 characters").notEmpty().isLength({ min: 5, max: 30 }).optional(),
-        (0, express_validator_1.body)("rating", "Rating must be in range of 0-5").notEmpty().isFloat({ min: 0, max: 5 }).optional(),
+        (0, express_validator_1.query)("body", "Body message must be between 20 and 1000 characters").notEmpty().isLength({ min: 20, max: 1000 }).optional(),
+        (0, express_validator_1.query)("title", "Title must be between 5 and 30 characters").notEmpty().isLength({ min: 5, max: 30 }).optional(),
+        (0, express_validator_1.query)("rating", "Rating must be in range of 0-5").notEmpty().isFloat({ min: 0, max: 5 }).optional(),
     ];
 };
 exports.updateReviewRules = updateReviewRules;
