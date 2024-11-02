@@ -58,3 +58,68 @@ GET http://localhost:3000/user/67252a8d257eb4581d884614/reviews
 
 ###
 GET http://localhost:3000/movies/67266acb84c25583a290928c/reviews
+
+
+
+
+### RENDER
+### Create a new user
+POST https://cse341w08project.onrender.com/user HTTP/1.1
+content-type: application/json
+
+{
+    "username": "turnip",
+    "password": "password1221",
+    "email": "sample.email@email.com"
+}
+### Get all users
+GET https://cse341w08project.onrender.com/user
+
+### Get a specific user with id of 1
+GET https://cse341w08project.onrender.com/user/67252a8d257eb4581d884614
+### Update a user with an id of 1
+PUT https://cse341w08project.onrender.com/user/1?username=turnipHill1&password=$talberg2
+### Delete a user with a specified id of 1
+DELETE https://cse341w08project.onrender.com/user/67252a8d257eb4581d884614
+### LOCAL MOVIES
+
+POST https://cse341w08project.onrender.com/movies HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Indiana Jones and the Temple of Doom",
+    "maker": "LucasFilm",
+    "genre": "Action/Adventure",
+    "cover": "https://imgur.com/a/4LahX4J",
+    "date": "May 8, 1984",
+    "description": "A 1930s adventure set in the depths of India, Indy and his friends investigate the strange disappearances of children from a small village. As the mystery leads them within a foreboding temple, Indy is in for a challenge, with alligators, creepy-crawlies, menacing villains, a precarious mine tunnel, and even supernatural powers.",
+    "rating": "PG"
+}
+###
+GET https://cse341w08project.onrender.com/movies
+
+###
+GET https://cse341w08project.onrender.com/movies/67266acb84c25583a290928c
+
+###
+PUT https://cse341w08project.onrender.com/movies/67266acb84c25583a290928c?genre=Action/Adventure
+
+###
+DELETE https://cse341w08project.onrender.com/movies/67266acb84c25583a290928c
+
+### LOCAL REVIEWS
+
+POST https://cse341w08project.onrender.com/user/67252a8d257eb4581d884614/reviews?movie=67266acb84c25583a290928c HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "cool movie",
+    "body": "👍",
+    "rating": 4.5
+}
+
+###
+GET https://cse341w08project.onrender.com/user/67252a8d257eb4581d884614/reviews
+
+###
+GET https://cse341w08project.onrender.com/movies/67266acb84c25583a290928c/reviews
