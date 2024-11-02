@@ -11,6 +11,6 @@ export function userValidationError(error: ApiValidationError, req: Request, res
             message: JSON.parse(error.name),
         })
     };
-    console.log("ERROR???")
+    console.log(error)
     next(error);
 }
