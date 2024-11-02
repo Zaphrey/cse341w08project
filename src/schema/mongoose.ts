@@ -7,13 +7,10 @@ config();
 const dbUrl: string | null = process.env.DB_URL || null
 
 export type IUser = {
-    _id: Types.ObjectId,
     name: string,
     password: string,
     email: string,
     date_joined: string,
-    user_id: number,
-    reviews: Types.ObjectId,
 }
 
 export type IReview = {
@@ -32,17 +29,14 @@ export type IMovie = {
     cover: string,
     description: string,
     date: string,
-    reviews: Types.ObjectId,
+    rating: string,
 }
 
 const userSchema = new Schema<IUser>({
-    _id: { type: Schema.Types.ObjectId, required: true },
     name: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
     date_joined: { type: String, required: true },
-    user_id: { type: Number, required: true },
-    reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }]
 });
 
 // From here, we'll establish a One-to-Many database connection from
@@ -64,7 +58,7 @@ const movieSchema = new Schema<IMovie>({
     cover: { type: String, required: true },
     date: { type: String, required: true},
     description: { type: String, required: false },
-    reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }]
+    rating: { type: String, required: true},
 })
 
 // userSchema.plugin(autoIncrement, { id: "user_id", inc_field: "id" })
