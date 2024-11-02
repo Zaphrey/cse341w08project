@@ -52,9 +52,9 @@ export const getUserReviewsRules = () => {
 
 export const updateReviewRules = () => {
     return [
-        body("body", "Body message must be between 20 and 1000 characters").notEmpty().isLength({ min: 20, max: 1000 }).optional(),
-        body("title", "Title must be between 5 and 30 characters").notEmpty().isLength({ min: 5, max: 30 }).optional(),
-        body("rating", "Rating must be in range of 0-5").notEmpty().isFloat({ min: 0, max: 5}).optional(),
+        query("body", "Body message must be between 20 and 1000 characters").notEmpty().isLength({ min: 20, max: 1000 }).optional(),
+        query("title", "Title must be between 5 and 30 characters").notEmpty().isLength({ min: 5, max: 30 }).optional(),
+        query("rating", "Rating must be in range of 0-5").notEmpty().isFloat({ min: 0, max: 5}).optional(),
     ]
 }
 
