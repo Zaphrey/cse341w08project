@@ -21,38 +21,27 @@ exports.deleteAllUsers = deleteAllUsers;
 const dotenv_1 = require("dotenv");
 const mongoose_1 = require("../schema/mongoose");
 const mongoose_2 = require("mongoose");
-const express_validator_1 = require("express-validator");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const customErrors_1 = require("../errors/customErrors");
+const validators_1 = require("../routes/validators");
 (0, dotenv_1.config)();
-const DB_URI = (String)(process.env.DB_URL || ""); // Assuming that the DB URI is in fact there
+const DB_URI = (String)(process.env.DB_URL || "DB URI not found"); // Assuming that the DB URI is in fact there
 function addUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         // Assume all parameters exist, then check
-        let result = (0, express_validator_1.validationResult)(req);
-        if (!result.isEmpty()) {
-            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
-        }
+        (0, validators_1.verifyAPIData)(req);
         yield (0, mongoose_2.connect)(DB_URI);
-        let doc_id = new mongoose_2.mongo.ObjectId().toString();
-        let user_id = 1;
-        let users = yield mongoose_1.User.find({}).sort({ "user_id": -1 });
         let hashedPassword = yield bcrypt_1.default.hash(req.body.password, 10);
-        if (users[0]) {
-            user_id += users[0].user_id;
-        }
+        let date = new Date().toISOString().replace("/T/", " ").replace(/\..+/, "");
         const user = new mongoose_1.User({
-            _id: doc_id,
             name: req.body.username,
             password: hashedPassword,
             email: req.body.email,
-            date_joined: new Date().toISOString().replace("/T/", " ").replace(/\..+/, ""),
-            user_id: user_id,
+            date_joined: date,
         });
         yield user.save();
         mongoose_2.connection.close();
         res.setHeader("Content-Type", "text/html");
-        res.status(201).send(`Created user ${user_id}, ${doc_id}`);
+        res.status(201).send(`Created user ${user._id}`);
     });
 }
 // Get
@@ -67,15 +56,17 @@ function getUsers(req, res, next) {
 }
 function getUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        let result = (0, express_validator_1.validationResult)(req);
-        if (!result.isEmpty()) {
-            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
-        }
+        (0, validators_1.verifyAPIData)(req);
         yield (0, mongoose_2.connect)(DB_URI);
-        mongoose_1.User.findOne({ user_id: Number.parseInt(req.params.id) })
+        mongoose_1.User.findOne({ _id: req.params.id })
             .then(user => {
-            res.setHeader("Content-Type", "application/json");
-            res.status(200).send(JSON.stringify(user));
+            if (user) {
+                res.setHeader("Content-Type", "application/json");
+                res.status(200).send(JSON.stringify(user));
+            }
+            else {
+                res.status(400).send("Could not find user");
+            }
         })
             .catch(error => {
             res.status(422).send(error);
@@ -86,25 +77,24 @@ function getUser(req, res, next) {
 function updateUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, _b, _c;
-        let result = (0, express_validator_1.validationResult)(req);
-        if (!result.isEmpty()) {
-            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
-        }
-        let query = req.query;
-        let filter = { user_id: Number.parseInt(req.params.id) };
-        // let userData = await User.findOne(filter);
-        let password = (_a = query.password) === null || _a === void 0 ? void 0 : _a.toString();
+        (0, validators_1.verifyAPIData)(req);
+        let password = (_a = req.query.password) === null || _a === void 0 ? void 0 : _a.toString();
         if (password) {
             password = yield bcrypt_1.default.hash(password, 10);
         }
         let update = {
-            name: (_b = query.username) === null || _b === void 0 ? void 0 : _b.toString(),
+            name: (_b = req.query.username) === null || _b === void 0 ? void 0 : _b.toString(),
             password: password,
-            email: (_c = query.email) === null || _c === void 0 ? void 0 : _c.toString()
+            email: (_c = req.query.email) === null || _c === void 0 ? void 0 : _c.toString()
         };
-        mongoose_1.User.findOneAndUpdate(filter, update)
-            .then(() => {
-            res.status(201).send("Successfully updated user");
+        mongoose_1.User.findByIdAndUpdate(req.params.id, update)
+            .then(user => {
+            if (user) {
+                res.status(201).send(`Successfully updated user`);
+            }
+            else {
+                res.status(400).send(`Could not update user`);
+            }
         })
             .catch(error => {
             res.status(400).send(error);
@@ -114,16 +104,16 @@ function updateUser(req, res, next) {
 // Delete 
 function deleteUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        let result = (0, express_validator_1.validationResult)(req);
-        if (!result.isEmpty()) {
-            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
-        }
-        let id = Number.parseInt(req.params.id);
-        let filter = { user_id: id };
+        (0, validators_1.verifyAPIData)(req);
         yield (0, mongoose_2.connect)(DB_URI);
-        mongoose_1.User.findOneAndDelete(filter)
-            .then(() => {
-            res.status(204).send();
+        mongoose_1.User.findByIdAndDelete(req.params.id)
+            .then(user => {
+            if (user) {
+                res.status(204).send();
+            }
+            else {
+                res.status(400).send("Could not find user");
+            }
         })
             .catch(error => {
             res.status(400).send(error);
@@ -132,10 +122,7 @@ function deleteUser(req, res, next) {
 }
 function deleteAllUsers(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        let result = (0, express_validator_1.validationResult)(req);
-        if (!result.isEmpty()) {
-            throw new customErrors_1.ApiValidationError(`${JSON.stringify(result, null, 4)}`);
-        }
+        (0, validators_1.verifyAPIData)(req);
         yield (0, mongoose_2.connect)(DB_URI);
         mongoose_1.User.deleteMany({ user_id: { $gt: 0 } })
             .then(query => {
