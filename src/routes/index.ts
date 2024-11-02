@@ -1,4 +1,4 @@
-import { addUser, getUsers, getUser, updateUser, deleteUser, deleteAllUsers } from "@controllers/index";
+import { addUser, getUsers, getUser, updateUser, deleteUser, deleteAllUsers, addReview, getMovies, addMovie, getReviews } from "@controllers/index";
 import { NextFunction, Request, Response, Router } from "express";
 import swaggerUi from "swagger-ui-express";
 import { getUserRules, createUserRules, updateUserRules, deleteUserRules } from "./validators";
@@ -17,6 +17,13 @@ defaultRouter.get("/user/:id", getUserRules(), getUser);
 defaultRouter.put("/user/:id", updateUserRules(), updateUser);
 
 defaultRouter.delete("/user/:id", deleteUserRules(), deleteUser)
+defaultRouter.post("/user/:id/reviews", addReview)
+defaultRouter.get("/user/:id/reviews", getReviews)
+
+// Movies
+
+defaultRouter.post("/movies", addMovie);
+defaultRouter.get("/movies", getMovies);
 
 // This route is just intended to clear up excess documents
 defaultRouter.delete("/user", deleteAllUsers)

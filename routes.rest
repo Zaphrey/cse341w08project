@@ -3,7 +3,7 @@ POST http://localhost:3000/user HTTP/1.1
 content-type: application/json
 
 {
-    "username": "zaphrey",
+    "username": "turnip",
     "password": "password1221",
     "email": "sample.email@email.com"
 }
@@ -16,6 +16,32 @@ GET http://localhost:3000/user/1
 PUT http://localhost:3000/user/1?username=turnipHill1&password=$talberg2
 ### Delete a user with a specified id of 1
 DELETE http://localhost:3000/user/1
+### LOCAL MOVIES
+
+POST http://localhost:3000/movies HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Indiana Jones and the Temple of Doom",
+    "maker": "LucasFilm",
+    "genre": "Action/Adventure",
+    "cover": "https://imgur.com/a/4LahX4J",
+    "date": "May 8, 1984",
+    "description": "A 1930s adventure set in the depths of India, Indy and his friends investigate the strange disappearances of children from a small village. As the mystery leads them within a foreboding temple, Indy is in for a challenge, with alligators, creepy-crawlies, menacing villains, a precarious mine tunnel, and even supernatural powers."
+}
+###
+GET http://localhost:3000/movies
+
+### LOCAL REVIEWS
+
+POST http://localhost:3000/user/1/reviews?movie=Indiana Jones and the Temple of Doom HTTP/1.1
+Content-Type: application/json
+
+{
+    "title": "great movie",
+    "body": "great movie, i would recommend",
+    "rating": 4.5
+}
 
 ### RENDER
 

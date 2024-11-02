@@ -31,6 +31,18 @@ export const deleteUserRules = () => {
     ]
 }
 
+export const addMovieRules = () => {
+    return [
+        param("id", "User Id must be numerical.").notEmpty().isNumeric(),
+        body("name").notEmpty(),
+        body("genre").notEmpty(),
+        body("maker").notEmpty(),
+        body("cover").notEmpty(),
+        body("date").notEmpty(),
+        body("description").notEmpty().optional(),
+    ]
+}
+
 export const validate = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req)
     console.log(errors)

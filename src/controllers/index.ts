@@ -1,6 +1,6 @@
 import { config } from "dotenv"
-import { NextFunction, Request, Response } from "express"
-import { User, connectDB } from "@schema/mongoose";
+import { NextFunction, query, Request, Response } from "express"
+import { User, Movie, Review, connectDB } from "@schema/mongoose";
 import mongoose, { connect, connection, mongo } from "mongoose"
 import { validationResult } from "express-validator";
 import { ObjectType } from "typescript";
@@ -8,7 +8,7 @@ import bcrypt from "bcrypt"
 import { ApiValidationError } from "@error/customErrors";
 config();
 
-const DB_URI = (String)(process.env.DB_URL || "") // Assuming that the DB URI is in fact there
+const DB_URI = (String)(process.env.DB_URL || "DB URI not found") // Assuming that the DB URI is in fact there
 
 //Create 
 
@@ -33,6 +33,7 @@ export async function addUser(req: Request, res: Response, next: NextFunction) {
 
     let users = await User.find({}).sort({ "user_id": -1 });
     let hashedPassword = await bcrypt.hash(req.body.password, 10);
+    let date = new Date().toISOString().replace("/T/", " ").replace(/\..+/, "")
 
     if (users[0]) {
         user_id += users[0].user_id
@@ -43,7 +44,7 @@ export async function addUser(req: Request, res: Response, next: NextFunction) {
         name: req.body.username,
         password: hashedPassword,
         email: req.body.email,
-        date_joined: new Date().toISOString().replace("/T/", " ").replace(/\..+/, ""),
+        date_joined: date,
         user_id: user_id,
     })
 
@@ -157,4 +158,99 @@ export async function deleteAllUsers(req: Request, res: Response, next: NextFunc
         .catch(error => {
             res.status(422).send()
         })
+}
+
+// MOVIE
+
+export async function addMovie(req: Request, res: Response, next: NextFunction) {
+    let result = validationResult(req);
+
+    if (!result.isEmpty()) {
+        throw new ApiValidationError();
+    }
+
+    await connect(DB_URI);
+
+    const movie = new Movie({
+        name: req.body.name,
+        genre: req.body.genre,
+        maker: req.body.maker,
+        cover: req.body.cover,
+        date: req.body.date,
+        description: req.body.description,
+    })
+
+    await movie.save()
+
+    res.status(200).send("Movie created")
+}
+
+export async function getMovies(req: Request, res: Response, next: NextFunction) {
+    let result = validationResult(req);
+
+    if (!result.isEmpty()) {
+        throw new ApiValidationError();
+    }
+
+    await connect(DB_URI);
+
+    Movie.find({}).then(movies => {
+        res.status(200).send(JSON.stringify(movies));
+    }).catch(error => {
+        res.status(400).send(error)
+    })
+}
+
+// REVIEW
+
+export async function addReview(req: Request, res: Response, next: NextFunction) {
+    let result = validationResult(req);
+
+    if (!result.isEmpty()) {
+        throw new ApiValidationError();
+    }
+
+    await connect(DB_URI);
+
+    let user = await User.findOne({ user_id: Number.parseInt(req.params.id) })
+    let movie = await Movie.findOne({ name: req.query.movie })
+    console.log(movie)
+    if (user && movie) {
+        let date = new Date().toISOString().replace("/T/", " ").replace(/\..+/, "")
+
+        const review = new Review({
+            body: req.body.body,
+            title: req.body.title,
+            rating: req.body.rating,
+            date: date,
+            movie: movie._id,
+            user: user._id,
+        })
+
+        await review.save()
+
+        res.status(201).send(JSON.stringify(user._id) + JSON.stringify(movie))
+    } else {
+        res.status(400).send("user could not be found")
+    }
+}
+
+export async function getReviews(req: Request, res: Response) {
+    let result = validationResult(req);
+
+    if (!result.isEmpty()) {
+        throw new ApiValidationError();
+    }
+
+    await connect(DB_URI);
+    let id = Number.parseInt(req.params.id)
+    let user = await User.findOne({ user_id: id })
+    
+    if (user) {
+        let reviews = await Review.find({ user: user._id })
+        console.log(user)
+        res.status(200).send(JSON.stringify(reviews));
+    } else {
+        res.status(400).send("Could not find user")
+    }
 }
