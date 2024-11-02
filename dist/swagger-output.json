@@ -13,7 +13,7 @@
   "paths": {
     "/user": {
       "post": {
-        "description": "Sends a request to create a new user in the database.",
+        "description": "Sends a request to create a new user in the database and returns a new ID linked to the user",
         "produces": [
           "text/html"
         ],
@@ -78,7 +78,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "number"
+            "type": "string"
           }
         ],
         "responses": {
@@ -152,6 +152,313 @@
           },
           "422": {
             "description": "Unprocessable Content"
+          }
+        }
+      }
+    },
+    "/user/{id}/reviews": {
+      "post": {
+        "description": "Creates a new review from the specified user id and movie id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "movie_id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "example": "67266acb84c25583a290928c"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "example": "Review Subject"
+                },
+                "body": {
+                  "example": "Review Body Lorem ipsum odor amet, consectetuer adipiscing elit."
+                },
+                "rating": {
+                  "example": "4.5"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "get": {
+        "description": "Gets a complete list of reviews from the user with the specified ID",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "put": {
+        "description": "Updates the review from the filled in fields",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string",
+            "between": "5-30 characters"
+          },
+          {
+            "name": "body",
+            "in": "query",
+            "type": "string",
+            "between": "20-1000 characters"
+          },
+          {
+            "name": "rating",
+            "in": "query",
+            "type": "string",
+            "between": "0-5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a review with the specified ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "post": {
+        "description": "Creates a new movie entry in the database",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "required": true,
+                  "example": "Indiana Jones and the Temple of Doom"
+                },
+                "genre": {
+                  "required": true,
+                  "example": "Action/Adventure"
+                },
+                "maker": {
+                  "required": true,
+                  "example": "LucasFilm"
+                },
+                "cover": {
+                  "required": true,
+                  "example": "https://imgur.com/a/4LahX4J"
+                },
+                "date": {
+                  "required": true,
+                  "example": "May 8, 1984"
+                },
+                "description": {
+                  "required": true,
+                  "example": "A 1930s adventure set in the depths of India, Indy and his friends investigate the strange disappearances of children from a small village. As the mystery leads them within a foreboding temple, Indy is in for a challenge, with alligators, creepy-crawlies, menacing villains, a precarious mine tunnel, and even supernatural powers.",
+                  "between": "20-1000 characters"
+                },
+                "rating": {
+                  "required": true,
+                  "example": "PG"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "description": "Gets a list of all movies in the database",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/movies/{id}": {
+      "get": {
+        "description": "Gets a specific movie from the database from the provided ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "put": {
+        "description": "Updates the movie from the filled in fields",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "maker",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "cover",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "string",
+            "between": "20-1000 characters"
+          },
+          {
+            "name": "rating",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "delete": {
+        "description": "Deletes a movie from the database from the specified ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/movies/{id}/reviews": {
+      "get": {
+        "description": "Gets a list of all reviews a movie has received from the specified ID",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
