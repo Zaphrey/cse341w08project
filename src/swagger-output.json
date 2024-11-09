@@ -7,6 +7,17 @@
   },
   "host": "localhost:3000",
   "basePath": "/",
+  "securityDefinitions": {
+    "google_oauth": {
+      "type": "oauth2",
+      "flow": "implicit",
+      "authorizationURL": "http://locallhost:3000/auth",
+      "scopes": {
+        "read_email": "Read your email",
+        "read_profile": "Read your profile data"
+      }
+    }
+  },
   "schemes": [
     "http"
   ],
@@ -14,6 +25,12 @@
     "/user": {
       "post": {
         "description": "Sends a request to create a new user in the database and returns a new ID linked to the user",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "produces": [
           "text/html"
         ],
@@ -95,6 +112,12 @@
       },
       "put": {
         "description": "Updates the data of a user from the specified ID with the included information.",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "produces": [
           "application/json"
         ],
@@ -135,6 +158,12 @@
       },
       "delete": {
         "description": "Deletes the user data from the specified ID",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "id",
@@ -159,6 +188,12 @@
     "/user/{id}/reviews": {
       "post": {
         "description": "Creates a new review from the specified user id and movie id",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "id",
@@ -225,6 +260,12 @@
       },
       "put": {
         "description": "Updates the review from the filled in fields",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "id",
@@ -262,6 +303,12 @@
       },
       "delete": {
         "description": "Deletes a review with the specified ID",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "id",
@@ -283,6 +330,12 @@
     "/movies": {
       "post": {
         "description": "Creates a new movie entry in the database",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "body",
@@ -366,6 +419,12 @@
       },
       "put": {
         "description": "Updates the movie from the filled in fields",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "id",
@@ -421,6 +480,12 @@
       },
       "delete": {
         "description": "Deletes a movie from the database from the specified ID",
+        "security": {
+          "oAuthSample": [
+            "read_profile",
+            "read_email"
+          ]
+        },
         "parameters": [
           {
             "name": "id",

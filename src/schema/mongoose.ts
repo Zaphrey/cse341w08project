@@ -8,9 +8,9 @@ const dbUrl: string | null = process.env.DB_URL || null
 
 export type IUser = {
     name: string,
-    password: string,
     email: string,
     date_joined: string,
+    googleId: string,
 }
 
 export type IReview = {
@@ -34,9 +34,9 @@ export type IMovie = {
 
 const userSchema = new Schema<IUser>({
     name: { type: String, required: true },
-    password: { type: String, required: true },
     email: { type: String, required: true },
     date_joined: { type: String, required: true },
+    googleId: { type: String, requred: true },
 });
 
 // From here, we'll establish a One-to-Many database connection from
