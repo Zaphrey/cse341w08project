@@ -30,7 +30,7 @@ else {
     passport_1.default.use(new passport_google_oauth2_1.Strategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: "https://cse341w08project.onrender.com"
+        callbackURL: "https://cse341w08project.onrender.com/auth/callback"
     }, function (accessToken, refreshToken, profile, done) {
         console.log(profile);
         (0, mongoose_1.connectDB)().then(() => {
