@@ -17,9 +17,9 @@ const mongoose_1 = require("mongoose");
 const dbUrl = process.env.DB_URL || null;
 const userSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
-    password: { type: String, required: true },
     email: { type: String, required: true },
     date_joined: { type: String, required: true },
+    googleId: { type: String, requred: true },
 });
 // From here, we'll establish a One-to-Many database connection from
 // the User collection with the Movie collection

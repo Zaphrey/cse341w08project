@@ -22,52 +22,6 @@
   ],
   "paths": {
     "/user": {
-      "post": {
-        "description": "Sends a request to create a new user in the database and returns a new ID linked to the user",
-        "security": {
-          "oAuthSample": [
-            "read_profile",
-            "read_email"
-          ]
-        },
-        "produces": [
-          "text/html"
-        ],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "example": "TopReviews12",
-                  "required": true
-                },
-                "password": {
-                  "example": "$wissCheese3011",
-                  "required": true
-                },
-                "email": {
-                  "example": "topreviews12@gmail.com",
-                  "required": true
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "422": {
-            "description": "Unprocessable Content"
-          }
-        }
-      },
       "get": {
         "description": "Gets a complete list of all the users.",
         "produces": [
