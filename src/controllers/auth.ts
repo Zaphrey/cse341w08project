@@ -14,7 +14,7 @@ if (process.env.CLIENT_ID === undefined || process.env.CLIENT_SECRET === undefin
     passport.use(new GoogleStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/auth/callback"
+        callbackURL: "https://cse341w08project.onrender.com/auth/callback"
     },
     function(accessToken: string, refreshToken: string, profile: Profile, done: (err: any, profile: Profile) => void) {
         console.log(profile)
